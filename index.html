@@ -105,7 +105,7 @@
         function getResponse(url) {
             var sock_address = '';
             var xhr = createRequest();
-            xhr.open("GET", '/ws-server/websocket.php', false);
+            xhr.open("GET", url, false);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
                     sock_address = xhr.responseText;

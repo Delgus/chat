@@ -22,3 +22,4 @@ function writeMessage($user, $message)
     $query->execute([':author' => $user, ':text' => $message, ':time' => time()]);
     $pdo = null;
 }
+
