@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Delgus Simple Chat</title>
+    <link type="text/css" rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="menu">
+        <p class="welcome">Welcome, <b id="username-label"></b></p>
+        <p class="logout" id="online"></p>
+        <div style="clear:both"></div>
+    </div>
+
+    <div id="chatbox"></div>
+
+    <form>
+        <input id="username" type="hidden" value="">
+        <input name="message" type="text" id="usermsg" size="63"/>
+        <input name="submit" type="submit" id="submitmsg" value="Send"/>
+    </form>
+</div>
+</body>
+<script>
+    window.onload = function () {
+        var username = prompt('введите ваш ник');
+        //получаем аяксом адрес чата
+        var sock_address = getResponse('/ws-server/websocket.php');
+        var ws;
+
+
+        ws = new WebSocket(sock_address + "/?user=" + encodeURI(username));
+        ws.onmessage = function (evt) {
+            var chatbox = document.getElementById("chatbox");
+            if (isJsonString(evt.data)) {
+                var content = JSON.parse(evt.data);
+
+                if (content.key === 'onlineEvent') {
+                    //онлайн/оффлайн событие
+                    document.getElementById('online').innerHTML = 'Онлайн: ' + content.onlineCount;
+                    chatbox.innerHTML += '<b>' + content.message + '</b><br>';
+                    chatbox.scrollTop = 9999;
+
+                } else {
+                    //история сообщений
+                    for (var l in content) {
+                        chatbox.innerHTML += "<b>" + content[l].author + "</b> : " + content[l].text + "<br>";
+                        chatbox.scrollTop = 9999;
+                    }
+                }
+
+            } else {
+                //новое сообщение
+                chatbox.innerHTML += evt.data + "<br>";
+                chatbox.scrollTop = 9999;
+            }
+        };
+
+        document.getElementById("username-label").innerHTML = username;
+
+        var form = document.querySelector('form');
+        form.onsubmit = function () {
+            if (form[1].value !== '') {
+                ws.send(form[1].value);
+            }
+            form[1].value = '';
+            return false;
+        }
+
+        //вспомогательные функции
+        function isJsonString(str) {
+            try {
+                JSON.parse(str);
+            } catch (e) {
+                return false;
+            }
+            return true;
+        }
+
+        function createRequest() {
+            var Request = false;
+
+            if (window.XMLHttpRequest) {
+                //Gecko-совместимые браузеры, Safari, Konqueror
+                Request = new XMLHttpRequest();
+            }
+            else if (window.ActiveXObject) {
+                //Internet explorer
+                try {
+                    Request = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                catch (CatchException) {
+                    Request = new ActiveXObject("Msxml2.XMLHTTP");
+                }
+            }
+
+            if (!Request) {
+                alert("Невозможно создать XMLHttpRequest");
+            }
+
+            return Request;
+        }
+
+        function getResponse(url) {
+            var sock_address = '';
+            var xhr = createRequest();
+            xhr.open("GET", '/ws-server/websocket.php', false);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    sock_address = xhr.responseText;
+                }
+            };
+            xhr.send();
+            return sock_address;
+        }
+
+    }
+
+</script>
+</html>

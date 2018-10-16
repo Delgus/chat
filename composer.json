@@ -1,0 +1,15 @@
+{
+    "name": "delgus/chat",
+    "description": "simple chat",
+    "type": "project",
+    "require": {
+        "workerman/workerman": "*"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "delgus",
+            "email": "alexdolgovak47@mail.ru"
+        }
+    ]
+}
