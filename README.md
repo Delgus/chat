@@ -6,8 +6,7 @@ simple example for chat use websocket
 git clone  https://github.com/Delgus/chat.git 
 
 composer install  
-
-``
+``  
 You must specify your settings in /ws-server/config.php  
 
 
