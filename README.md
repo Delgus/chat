@@ -3,8 +3,9 @@ simple example for chat use websocket
 
 ## Install  
 ``
-git clone  https://github.com/Delgus/chat.git && composer install  
+git clone  https://github.com/Delgus/chat.git && composer install     
 ``  
+
 You must specify your settings in /ws-server/config.php  
 
 
