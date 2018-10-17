@@ -1,25 +1,43 @@
 <?php
 require_once '../vendor/autoload.php';
-require_once 'config.php';
-require_once 'functions.php';
+require_once '../config/config.php';
 
+use Firebase\JWT\JWT;
 use Workerman\Worker;
+use db\Db;
 
 $ws_worker = new Worker('websocket://' . WEB_SOCKET);
+$db = new Db(DB_DSN, DB_USERNAME, DB_PASSWORD);
 
 // storage of user-connection link
 $users = [];
 
-$ws_worker->onConnect = function ($connection) use (&$users) {
-    $connection->onWebSocketConnect = function ($connection) use (&$users) {
+$ws_worker->onConnect = function ($connection) use (&$users, $db) {
+    $connection->onWebSocketConnect = function ($connection) use (&$users, $db) {
+        //Получаем и проверяем $jwt
+        $jwt = $_GET['jwt'];
+        $decode = JWT::decode($jwt, SECRET_KEY, array('HS256'));
+
+        //отправляем пользователю его имя
+        $username = [
+            'key' => 'username',
+            'username' => $decode->sub->username
+        ];
+        $connection->send(json_encode($username));
 
         //отправляем пользователю сообщения которые он пропустил
-        $connection->send(getMessages());
+        $connection->send($db->getMessages());
 
         //добавляем соединение в массив с пользовательскими соединениями
-        $users[$_GET['user']] = $connection;
+        $users[$decode->sub->username] = $connection;
+
+        //извещаем о том что вошел новый пользователь
         foreach ($users as $connection) {
-            $message = ['key' => 'onlineEvent', 'onlineCount' => count($users), 'message' => 'Вошел пользователь ' . $_GET['user']];
+            $message = [
+                'key' => 'onlineEvent',
+                'onlineCount' => count($users),
+                'message' => 'Вошел пользователь ' . $decode->sub->username
+            ];
             $connection->send(json_encode($message));
         }
 
@@ -37,12 +55,12 @@ $ws_worker->onClose = function ($connection) use (&$users) {
     }
 };
 
-$ws_worker->onMessage = function ($connection, $data) use (&$users) {
+$ws_worker->onMessage = function ($connection, $data) use (&$users, $db) {
     //имя пользователя
     $user = array_search($connection, $users);
 
     //записываем сообщение в бд
-    writeMessage($user,$data);
+    $db->writeMessage($user, $data);
 
     //рассылаем всем участникам сообщения
     foreach ($users as $connection) {
