@@ -9,7 +9,13 @@ composer install
 ```
  
 
-You must specify your settings in /ws-server/config.php  
+You must specify your settings in config/config.php
+
+Create table in db  
+```
+cd ws-server
+php install.php
+```  
 
 
 To start the server web socket as daemon in directory ws-server  
