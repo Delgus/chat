@@ -23,14 +23,19 @@
 </div>
 </body>
 <script>
+    if (!document.cookie) {
+        //если не авторизован - отправляем на auth-server
+        window.location = "/auth-server";
+    }
     window.onload = function () {
-        var username = prompt('введите ваш ник');
+
+        //var username = prompt('введите ваш ник');
         //получаем аяксом адрес чата
         var sock_address = getResponse('/ws-server/websocket.php');
         var ws;
 
-
-        ws = new WebSocket(sock_address + "/?user=" + encodeURI(username));
+        //ws = new WebSocket(sock_address + "/?user=" + encodeURI(username));
+        ws = new WebSocket(sock_address + "/?" + document.cookie);
         ws.onmessage = function (evt) {
             var chatbox = document.getElementById("chatbox");
             if (isJsonString(evt.data)) {
@@ -41,6 +46,10 @@
                     document.getElementById('online').innerHTML = 'Онлайн: ' + content.onlineCount;
                     chatbox.innerHTML += '<b>' + content.message + '</b><br>';
                     chatbox.scrollTop = 9999;
+
+                } else if (content.key === 'username') {
+
+                    document.getElementById("username-label").innerHTML = content.username;
 
                 } else {
                     //история сообщений
@@ -57,7 +66,7 @@
             }
         };
 
-        document.getElementById("username-label").innerHTML = username;
+
 
         var form = document.querySelector('form');
         form.onsubmit = function () {
