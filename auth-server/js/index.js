@@ -174,7 +174,10 @@ var login_form = document.getElementById("login-form");
 sign_up_form.onsubmit = function (e) {
     e.preventDefault();
     var data = new FormData(sign_up_form);
-    var token = post('/auth-server/signup.php', "POST", data);
+    var answer = post('/auth-server/signup.php', "POST", data);
+    if (answer === 'true') {
+        alert('Вы успешно зарегистрировались!!!');
+    }
 }
 login_form.onsubmit = function (e) {
     e.preventDefault();

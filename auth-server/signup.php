@@ -8,6 +8,7 @@ if ($_POST) {
     $password_hash = password_hash($post['password'],PASSWORD_DEFAULT);
     $db = new \db\Db(DB_DSN,DB_USERNAME,DB_PASSWORD);
     $db->saveUser($post['username'],$post['email'],$password_hash);
+    echo "true";
 }
 //silence is gold
 die();

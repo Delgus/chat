@@ -39,6 +39,7 @@ class Db
     public function getMessages()
     {
         $this->open();
+        //TODO: реализовать пагинацию
         $messages = $this->pdo->query("SELECT * FROM messages")->fetchAll(PDO::FETCH_ASSOC);
         $this->close();
         return json_encode($messages);
