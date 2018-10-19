@@ -12,10 +12,11 @@ if ($_POST) {
         //Если все хорошо создаем JWT токен
         if ($valid) {
             $token = [
-                "iss" => HOST_NAME,
-                "aud" => WEB_SOCKET,
-                "iat" => time(),
-                // "exp" => time() + SECRET_KEY_LIVE,
+                "iss" => HOST_NAME, //(issuer) издатель токена
+                "aud" => WEB_SOCKET,//(audience) аудитория, получатели токена
+                "iat" => time(),    //(issued at) время создания токена
+                "exp" => time() + TOKEN_LIVE,//(expire time) срок действия токена
+                //(subject) "тема", назначение токена
                 "sub" => [
                     'id' => $user['id'],
                     'username' => $user['username']
@@ -26,6 +27,8 @@ if ($_POST) {
         } else {
             echo "false";
         }
+    } else {
+        echo "false";
     }
 }
 //silence is gold

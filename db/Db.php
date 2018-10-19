@@ -34,15 +34,16 @@ class Db
 
     /**
      * Получить сообщения
-     * @return string
+     * @return array
      */
     public function getMessages()
     {
         $this->open();
-        //TODO: реализовать пагинацию
-        $messages = $this->pdo->query("SELECT * FROM messages")->fetchAll(PDO::FETCH_ASSOC);
+        $messages = $this->pdo->query(
+            "SELECT * FROM (SELECT * FROM `messages` ORDER BY id DESC LIMIT " . MESSAGES_ON_PAGE . ") AS _t ORDER BY id ASC;"
+        )->fetchAll(PDO::FETCH_ASSOC);
         $this->close();
-        return json_encode($messages);
+        return $messages;
     }
 
     /**
