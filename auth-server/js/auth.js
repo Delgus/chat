@@ -9,33 +9,30 @@ signinTab.onclick = function () {
     signinTab.classList.add('active');
     signupTab.classList.remove('active');
 }
+
 signupTab.onclick = function () {
     signinForm.style.display = 'none';
     signupForm.style.display = '';
     signupTab.classList.add('active');
     signinTab.classList.remove('active');
 }
+
 signinForm.onsubmit = function (e) {
-    alert("signin");
     e.preventDefault();
+    var xhr = createRequest();
     var data = new FormData(signinForm);
-    var token = post('/auth-server/login.php', "POST", data);
-    if (token) {
-        document.cookie = 'jwt=' + token + '; path=/';
-        window.location = "/";
-    } else {
-        alert("Неверные логин или пароль!!!");
-    }
-}
-signupForm.onsubmit = function (e) {
-    e.preventDefault();
-    var data = new FormData(signupForm);
-    var answer = post('/auth-server/signup.php', "POST", data);
-    if (answer === 'true') {
-        alert('Вы успешно зарегистрировались!!!');
-    } else {
-        alert(answer);
-    }
+    xhr.open("POST", '/auth-server/login.php');
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            var answer = xhr.responseText;
+            if (answer.result) {
+                alert("success");
+            } else {
+                alert("fail");
+            }
+        }
+    };
+    xhr.send(data);
 }
 
 //ajax запрос на чистом js
@@ -63,16 +60,21 @@ function createRequest() {
     return Request;
 }
 
-function post(url, method, data) {
-    var token = '';
+signupForm.onsubmit = function (e) {
+    e.preventDefault();
     var xhr = createRequest();
-    xhr.open(method, url, false);
+    var data = new FormData(signupForm);
+    xhr.open("POST", '/auth-server/signup.php');
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-            token = xhr.responseText;
+            var answer = xhr.responseText;
+            if (answer.result) {
+                alert("success");
+            } else {
+                alert("fail");
+            }
         }
     };
     xhr.send(data);
-    return token;
 }
 

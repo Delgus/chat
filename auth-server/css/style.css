@@ -1,6 +1,6 @@
 body {
     background: url("/auth-server/images/cover.jpg") no-repeat center fixed;
-    background-size: cover;
+    background-size: auto;
 }
 
 .auth-container {
@@ -32,6 +32,7 @@ body {
     cursor: pointer;
     background: deepskyblue;
     color: white;
+    border-radius: 10px;
 }
 
 .tab a {
@@ -86,15 +87,30 @@ button {
     .auth-container {
         width: 100%;
     }
+
+    .tab {
+        font-size: 24px;
+    }
 }
 
 @media (max-width: 560px) {
     .tab a {
         padding: 5px 20px 5px 20px;
     }
-
-    .tab {
-        font-size: 24px;
+    .auth-container {
+        margin: auto;
+    }
+    .tabs-container {
+        height: 60px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 5px;
+    }
+    label {
+        font-size: 18px;
+        padding: 10px 10% 10px 10%;
     }
 }
 

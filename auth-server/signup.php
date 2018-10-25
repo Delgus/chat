@@ -5,9 +5,7 @@ require_once '../config/config.php';
 if ($_POST) {
     $post = filter_input_array(INPUT_POST, $_POST);
 
-
     $errors = [];
-
 
     //require field username
     if (empty($post['username'])) {
@@ -25,25 +23,27 @@ if ($_POST) {
     }
 
     if (empty($errors)) {
-        $db = new \db\Db(DB_DSN, DB_USERNAME, DB_PASSWORD);
-        //unique username
-        if ($db->getUserByUsername($post['username'])) {
-            $errors['username'] = 'Not unique user!';
-        }
-        //unique email
-        if ($db->getUserByEmail($post['email'])) {
-            $errors['email'] = 'Not unique email!';
-        }
+    	try {
+		    $db = new \db\Db(DB_DSN, DB_USERNAME, DB_PASSWORD);
+		    //unique username
+		    if ($db->getUserByUsername($post['username'])) {
+			    $errors['username'] = 'Not unique user!';
+		    }
+		    //unique email
+		    if ($db->getUserByEmail($post['email'])) {
+			    $errors['email'] = 'Not unique email!';
+		    }
+	    } catch(Throwable $e){
+    		$errors['server'] = 'Internal error';
+	    }
     }
 
     if (empty($errors)) {
         //save user
         $password_hash = password_hash($post['password'], PASSWORD_DEFAULT);
         $db->saveUser($post['username'], $post['email'], $password_hash);
-        echo "true";
+        echo json_encode(['result' => true]);
         exit;
     }
-    echo json_encode($errors);
+    echo json_encode(['result' => false,'errors' => $errors]);
 }
-//silence is gold
-die();
