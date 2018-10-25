@@ -24,11 +24,12 @@ signinForm.onsubmit = function (e) {
     xhr.open("POST", '/auth-server/login.php');
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-            var answer = xhr.responseText;
+            var answer = JSON.parse(xhr.responseText);
             if (answer.result) {
-                alert("success");
+                document.cookie = 'jwt=' + answer.jwt + '; path=/';
+                window.location = "/";
             } else {
-                alert("fail");
+                alert("Fail!");
             }
         }
     };
@@ -44,15 +45,18 @@ signupForm.onsubmit = function (e) {
         if (xhr.readyState === 4) {
             var answer = xhr.responseText;
             if (answer.result) {
-                alert("success");
+                alert("SUCCESS")
             } else {
-                alert("fail");
+                alert("FAIL");
             }
         }
     };
     xhr.send(data);
 }
 
+if (document.cookie) {
+    window.location = "/";
+}
 
 
 //ajax запрос на чистом js

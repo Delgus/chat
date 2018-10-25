@@ -6,7 +6,7 @@
  * Time: 12:28
  */
 
-namespace ws;
+namespace chat;
 
 /**
  * Class ServerMessage

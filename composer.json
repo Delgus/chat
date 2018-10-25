@@ -16,7 +16,7 @@
   "autoload": {
     "psr-4": {
       "db\\": "db/",
-      "ws\\": "ws-server/"
+      "chat\\": "chat/src"
     }
   }
 }

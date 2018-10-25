@@ -1,11 +1,11 @@
 <?php
-require_once '../vendor/autoload.php';
-require_once '../config/config.php';
+require_once '../../vendor/autoload.php';
+require_once '../../config/config.php';
 
 use Firebase\JWT\JWT;
 use Workerman\Worker;
 use db\Db;
-use ws\ServerMessage;
+use chat\ServerMessage;
 
 $ws_worker = new Worker('websocket://' . WEB_SOCKET);
 $db = new Db(DB_DSN, DB_USERNAME, DB_PASSWORD);

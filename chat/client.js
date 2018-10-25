@@ -4,8 +4,12 @@ if (!document.cookie) {
 }
 window.onload = function () {
     //ajax-address websocket
-    var sock_address = getResponse('/ws-server/websocket.php');
+    var sock_address = getResponse('/info-server/websocket.php');
     var ws = new WebSocket(sock_address + "/?" + document.cookie);
+
+    ws.onerror = function(){
+        alert("WEBSOCKET SERVER DOESN'T WORK!");
+    }
 
     //обработка ответов вебсокета
     ws.onmessage = function (e) {
@@ -106,7 +110,7 @@ window.onload = function () {
     }
 
     function delete_cookie(name) {
-        document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
     }
 
 
