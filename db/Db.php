@@ -90,11 +90,26 @@ class Db
     }
 
     /**
+     * @param $email
+     * @return bool|mixed
+     */
+    public function getUserByEmail($email)
+    {
+        $this->open();
+        $query = $this->pdo->prepare("SELECT * FROM users WHERE email=:email");
+        $result = false;
+        if ($query->execute([':email' => $email])) {
+            $result = $query->fetch(PDO::FETCH_ASSOC);
+        }
+        $this->close();
+        return $result;
+    }
+
+    /**
      * @return $this
      */
     private function open()
     {
-        require_once '../config/config.php';
         $this->pdo = new PDO($this->_dsn, $this->_username, $this->_password);
         return $this;
     }

@@ -7,16 +7,17 @@ if ($_POST) {
     $db = new \db\Db(DB_DSN, DB_USERNAME, DB_PASSWORD);
     $user = $db->getUserByUsername($post['username']);
     if ($user) {
-        //проверка пароля
+        //validate password
         $valid = password_verify($post['password'], $user['password_hash']);
-        //Если все хорошо создаем JWT токен
+
+        //create jwt
         if ($valid) {
             $token = [
-                "iss" => HOST_NAME, //(issuer) издатель токена
-                "aud" => WEB_SOCKET,//(audience) аудитория, получатели токена
-                "iat" => time(),    //(issued at) время создания токена
-                "exp" => time() + TOKEN_LIVE,//(expire time) срок действия токена
-                //(subject) "тема", назначение токена
+                "iss" => HOST_NAME, //issuer
+                "aud" => WEB_SOCKET,//audience
+                "iat" => time(),    //issued at
+                "exp" => time() + TOKEN_LIVE,//expire time
+                //subject
                 "sub" => [
                     'id' => $user['id'],
                     'username' => $user['username']
@@ -24,12 +25,7 @@ if ($_POST) {
             ];
             $jwt = \Firebase\JWT\JWT::encode($token, SECRET_KEY);
             echo $jwt;
-        } else {
-            echo "false";
+            exit;
         }
-    } else {
-        echo "false";
     }
 }
-//silence is gold
-die();
