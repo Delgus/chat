@@ -35,6 +35,26 @@ signinForm.onsubmit = function (e) {
     xhr.send(data);
 }
 
+signupForm.onsubmit = function (e) {
+    e.preventDefault();
+    var xhr = createRequest();
+    var data = new FormData(signupForm);
+    xhr.open("POST", '/auth-server/signup.php');
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            var answer = xhr.responseText;
+            if (answer.result) {
+                alert("success");
+            } else {
+                alert("fail");
+            }
+        }
+    };
+    xhr.send(data);
+}
+
+
+
 //ajax запрос на чистом js
 function createRequest() {
     var Request = false;
@@ -60,21 +80,5 @@ function createRequest() {
     return Request;
 }
 
-signupForm.onsubmit = function (e) {
-    e.preventDefault();
-    var xhr = createRequest();
-    var data = new FormData(signupForm);
-    xhr.open("POST", '/auth-server/signup.php');
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            var answer = xhr.responseText;
-            if (answer.result) {
-                alert("success");
-            } else {
-                alert("fail");
-            }
-        }
-    };
-    xhr.send(data);
-}
+
 
