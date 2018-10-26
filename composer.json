@@ -6,7 +6,6 @@
     "workerman/workerman": "*",
     "firebase/php-jwt": "^5.0"
   },
-  "license": "MIT",
   "authors": [
     {
       "name": "delgus",

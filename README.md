@@ -1,5 +1,7 @@
 # chat
-simple example for chat use websocket
+Simple example for chat use websocket
+
+This is a project for my training. Don't use it in production.
 
 ## Install  
 ```
@@ -7,21 +9,43 @@ git clone  https://github.com/Delgus/chat.git
 cd chat  
 composer install  
 ```
- 
 
-You must specify your settings in config/config.php
-
-Create table in db  
+Create file for configure application:
 ```
-cd ws-server
-php install.php
+php init.php
+```
+
+
+You must specify your settings in config/config-local.php
+
+Create tables in db  
+```
+php auth/bin/auth-install.php
+php chat/bin/chat-install.php
 ```  
+or
+```
+composer auth-install
+composer chat-install
+```
 
 
-To start the server web socket as daemon in directory ws-server  
 
+To start the server web socket as daemon  
 ```
 php server.php start -d  
 ```
+or
+```
+composer chat-server
+```
 
-GOOD LUCK! Sorry for my english - it's terrible :)  
+You need to configure the web server so  that your server has activated 
+support for PHP and that all files ending in .php are handled by PHP.
+
+You can also use the php built-in server for the test 
+```
+php -S 127.0.0.1:8000
+```
+
+and see your application on http://127.0.0.1:8000
