@@ -3,6 +3,7 @@ Simple example for chat use websocket
 
 This is a project for my training. Don't use it in production.
 
+![screenshot](https://delgus.tk/img/screenshot.png)
 ## Install  
 ```
 git clone  https://github.com/Delgus/chat.git  
