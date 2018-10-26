@@ -36,12 +36,15 @@ class Db {
 	 */
 	public function getMessages() {
 		$this->open();
-		$messages = $this->pdo->query(
+		$data = $this->pdo->query(
 			"SELECT * FROM (SELECT * FROM `messages` ORDER BY id DESC LIMIT " . MESSAGES_ON_PAGE . ") AS _t ORDER BY id ASC;"
 		)->fetchAll( PDO::FETCH_ASSOC );
 		$this->close();
+		foreach ($data as &$one){
+		    $one['time'] = date(TIME_FORMAT,$one['time']);
+        }
 
-		return $messages;
+		return $data;
 	}
 
 	/**
@@ -56,6 +59,21 @@ class Db {
 		$query->execute( [ ':author' => $user, ':text' => $message, ':time' => time() ] );
 		$this->close();
 	}
+
+    /**
+     * @return array
+     */
+	public function getHistory(){
+        $this->open();
+        $data = $this->pdo->query(
+            "SELECT * FROM messages ORDER BY id ASC;"
+        )->fetchAll( PDO::FETCH_ASSOC );
+        $this->close();
+        foreach ($data as &$one){
+            $one['time'] = date(TIME_FORMAT,$one['time']);
+        }
+        return $data;
+    }
 
 	/**
 	 * Сохранение данных пользователя в БД

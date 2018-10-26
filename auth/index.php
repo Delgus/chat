@@ -1,3 +1,4 @@
+<?php require_once '../config/config-local.php'; ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -49,6 +50,10 @@
         </div>
     </form>
 </div>
+<script>
+    var auth_url = "<?=AUTH_URL?>";
+    var ref = "<?=filter_input(INPUT_GET, 'ref')?>";
+</script>
 <script src="js/auth.js"></script>
 </body>
 </html>

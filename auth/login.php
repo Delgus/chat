@@ -1,6 +1,6 @@
 <?php
 require_once '../vendor/autoload.php';
-require_once '../config/config.php';
+require_once '../config/config-local.php';
 
 if ( $_POST ) {
 	$post = filter_input_array( INPUT_POST, $_POST );

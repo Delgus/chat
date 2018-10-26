@@ -1,6 +1,6 @@
 <?php
-require_once '../../vendor/autoload.php';
-require_once '../../config/config.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../config/config-local.php';
 
 use Firebase\JWT\JWT;
 use Workerman\Worker;
@@ -15,44 +15,40 @@ $users = [];
 
 $ws_worker->onConnect = function ($connection) use (&$users, $db) {
     $connection->onWebSocketConnect = function ($connection) use (&$users, $db) {
-        //Получаем и проверяем $jwt
+        //get and validate JWT
         $jwt = $_GET['jwt'];
         try {
             $decode = JWT::decode($jwt, SECRET_KEY, array('HS256'));
         } catch (DomainException $e) {
-            $connection->send((string)new ServerMessage(ServerMessage::ATTACK_EVENT, 'Сервер был атакован!'));
+            $connection->send((string)new ServerMessage(ServerMessage::ATTACK_EVENT, 'The server has been attacked!'));
             foreach ($users as $connection) {
-                $connection->send((string)new ServerMessage(ServerMessage::ATTACK_EVENT, 'Сервер был атакован!'));
+                $connection->send((string)new ServerMessage(ServerMessage::ATTACK_EVENT, 'The server has been attacked!'));
             }
         } catch (\Firebase\JWT\SignatureInvalidException $e) {
-            $connection->send((string)new ServerMessage(ServerMessage::ATTACK_EVENT, 'Сервер был атакован!'));
+            $connection->send((string)new ServerMessage(ServerMessage::ATTACK_EVENT, 'The server has been attacked!'));
             foreach ($users as $connection) {
-                $connection->send((string)new ServerMessage(ServerMessage::ATTACK_EVENT, 'Сервер был атакован!'));
+                $connection->send((string)new ServerMessage(ServerMessage::ATTACK_EVENT, 'The server has been attacked!'));
             }
         } catch (\Firebase\JWT\BeforeValidException $e) {
-            $connection->send((string)new ServerMessage(ServerMessage::ATTACK_EVENT, 'Сервер был атакован!'));
+            $connection->send((string)new ServerMessage(ServerMessage::ATTACK_EVENT, 'The server has been attacked!'));
             foreach ($users as $connection) {
-                $connection->send((string)new ServerMessage(ServerMessage::ATTACK_EVENT, 'Сервер был атакован!'));
+                $connection->send((string)new ServerMessage(ServerMessage::ATTACK_EVENT, 'The server has been attacked'));
             }
         } catch (\Firebase\JWT\ExpiredException $e) {
-            $connection->send((string)new ServerMessage(ServerMessage::ATTACK_EVENT, 'Токен просрочен!'));
+            $connection->send((string)new ServerMessage(ServerMessage::EXPIRED_EVENT, 'Token are expired!'));
         }
 
         if (isset($decode)) {
-            //отправляем пользователю его имя
             $connection->send((string)new ServerMessage(ServerMessage::USERNAME_EVENT, $decode->sub->username));
 
-            //отправляем пользователю сообщения которые он пропустил
             $connection->send((string)new ServerMessage(ServerMessage::LAST_MESSAGES_EVENT, $db->getMessages()));
 
-            //добавляем соединение в массив с пользовательскими соединениями
             $users[$decode->sub->username] = $connection;
 
-            //извещаем о том что вошел новый пользователь
             foreach ($users as $connection) {
                 $connection->send((string)new ServerMessage(ServerMessage::ONLINE_EVENT, [
                     'count' => count($users),
-                    'message' => 'Вошел пользователь ' . $decode->sub->username
+                    'message' => 'Logged in user ' . $decode->sub->username
                 ]));
             }
         }
@@ -61,30 +57,26 @@ $ws_worker->onConnect = function ($connection) use (&$users, $db) {
     };
 };
 $ws_worker->onClose = function ($connection) use (&$users) {
-    //удаляем из хранилища закрытые соединения
+
     $user = array_search($connection, $users);
     unset($users[$user]);
-
-    //извещаем о событии
     foreach ($users as $connection) {
         $connection->send((string)new ServerMessage(ServerMessage::ONLINE_EVENT, [
             'count' => count($users),
-            'message' => 'Пользователь ' . $user . ' вышел'
+            'message' => 'User ' . $user . ' left'
         ]));
     }
 };
 
 $ws_worker->onMessage = function ($connection, $data) use (&$users, $db) {
-    //имя пользователя
+
     $user = array_search($connection, $users);
-
-    //записываем сообщение в бд
-    $db->writeMessage($user, $data);
-
-    //рассылаем всем участникам сообщения
     foreach ($users as $connection) {
-        $connection->send((string)new ServerMessage(ServerMessage::NEW_MESSAGE_EVENT, '<b>' . $user . '</b> : ' . $data));
+        $connection->send((string)new ServerMessage(ServerMessage::NEW_MESSAGE_EVENT,
+            '<b>' . $user . '</b> [' . date(TIME_FORMAT) . ']: ' . $data
+        ));
     }
+    $db->writeMessage($user, $data);
 };
 // Run worker
 Worker::runAll();

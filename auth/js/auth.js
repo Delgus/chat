@@ -17,35 +17,35 @@ signupTab.onclick = function () {
     signinTab.classList.remove('active');
 }
 
-signinForm.onsubmit = function (e) {
-    e.preventDefault();
+signinForm.onsubmit = function () {
     var xhr = createRequest();
     var data = new FormData(signinForm);
-    xhr.open("POST", '/auth-server/login.php');
+    xhr.open("POST", auth_url + '/login.php');
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
             var answer = JSON.parse(xhr.responseText);
             if (answer.result) {
                 document.cookie = 'jwt=' + answer.jwt + '; path=/';
-                window.location = "/";
+                window.location = ref;
             } else {
                 alert("Fail!");
             }
         }
     };
     xhr.send(data);
+    return false;
 }
 
 signupForm.onsubmit = function (e) {
     e.preventDefault();
     var xhr = createRequest();
     var data = new FormData(signupForm);
-    xhr.open("POST", '/auth-server/signup.php');
+    xhr.open("POST", auth_url + '/signup.php');
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-            var answer = xhr.responseText;
+            var answer = JSON.parse(xhr.responseText);
             if (answer.result) {
-                alert("SUCCESS")
+                alert("SUCCESS");
             } else {
                 alert("FAIL");
             }
@@ -55,7 +55,7 @@ signupForm.onsubmit = function (e) {
 }
 
 if (document.cookie) {
-    window.location = "/";
+    window.location = ref;
 }
 
 

@@ -16,7 +16,12 @@
   "autoload": {
     "psr-4": {
       "db\\": "db/",
-      "chat\\": "chat/src"
+      "chat\\": "chat/src/"
     }
+  },
+  "scripts": {
+    "chat-server": "php chat/bin/server.php start -d",
+    "chat-install": "php chat/bin/chat-install.php",
+    "auth-install": "php auth/bin/auth-install.php"
   }
 }

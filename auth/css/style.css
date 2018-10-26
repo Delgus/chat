@@ -1,6 +1,6 @@
 body {
-    background: url("/auth-server/images/cover.jpg") no-repeat center fixed;
-    background-size: auto;
+    background: url("/auth/images/cover.jpg") no-repeat center fixed;
+    background-size: cover;
 }
 
 .auth-container {
@@ -91,15 +91,21 @@ button {
     .tab {
         font-size: 24px;
     }
+
+    body {
+        background-size: auto;
+    }
 }
 
 @media (max-width: 560px) {
     .tab a {
         padding: 5px 20px 5px 20px;
     }
+
     .auth-container {
         margin: auto;
     }
+
     .tabs-container {
         height: 60px;
         width: 100%;
@@ -108,6 +114,7 @@ button {
         justify-content: center;
         border-radius: 5px;
     }
+
     label {
         font-size: 18px;
         padding: 10px 10% 10px 10%;

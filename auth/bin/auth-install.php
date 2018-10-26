@@ -1,5 +1,5 @@
 <?php
-require_once '../../config/config.php';
+require_once '../../config/config-local.php';
 $pdo = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
 //create users table
 $pdo->exec(

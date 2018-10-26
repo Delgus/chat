@@ -21,6 +21,9 @@ composer.phar
 # Mac DS_Store Files
 .DS_Store
 
+# config
+config/config-local.php
+
 # phpunit itself is not needed
 phpunit.phar
 # local phpunit config
