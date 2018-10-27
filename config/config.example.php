@@ -14,4 +14,5 @@ const AUTH_URL = "http://127.0.0.1:8000/auth";
 const WEB_SOCKET = '127.0.0.1:8888';
 const CHAT_URL = "http://127.0.0.1:8000/chat";
 const MESSAGES_ON_PAGE = 20;
+const TIME_ZONE = 'Europe/Moscow';
 const TIME_FORMAT = "d.m.Y H:i:s";

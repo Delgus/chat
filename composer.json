@@ -3,6 +3,7 @@
   "description": "simple chat",
   "type": "project",
   "require": {
+    "php": ">=7.2.0",
     "workerman/workerman": "*",
     "firebase/php-jwt": "^5.0"
   },
@@ -19,8 +20,9 @@
     }
   },
   "scripts": {
-    "chat-server": "php chat/bin/server.php start -d",
+    "chat-server-start": "php chat/bin/server.php start -d",
     "chat-install": "php chat/bin/chat-install.php",
-    "auth-install": "php auth/bin/auth-install.php"
+    "auth-install": "php auth/bin/auth-install.php",
+    "chat-server-stop": "php chat/bin/server.php stop"
   }
 }

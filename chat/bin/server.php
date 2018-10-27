@@ -1,5 +1,5 @@
 <?php
-require_once '/../../vendor/autoload.php';
+require_once __DIR__.'/../../vendor/autoload.php';
 require_once __DIR__ . '/../../config/config-local.php';
 
 use Firebase\JWT\JWT;
@@ -12,6 +12,8 @@ $db = new Db(DB_DSN, DB_USERNAME, DB_PASSWORD);
 
 // storage of user-connection link
 $users = [];
+
+date_default_timezone_set(TIME_ZONE);
 
 $ws_worker->onConnect = function ($connection) use (&$users, $db) {
     $connection->onWebSocketConnect = function ($connection) use (&$users, $db) {

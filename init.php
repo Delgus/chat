@@ -6,4 +6,4 @@ if (!copy($file, $newfile)) {
     echo "Could not copy file $file...\n";
     exit;
 }
-echo "Created file " . $newfile;
+echo "Created file " . $newfile."\n";

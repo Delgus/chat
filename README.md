@@ -34,11 +34,20 @@ composer chat-install
 
 To start the server web socket as daemon  
 ```
-php server.php start -d  
+php chat/bin/server.php start -d  
 ```
 or
 ```
-composer chat-server
+composer chat-server-start
+```
+
+To stop the server web socket
+```
+php chat/bin/server.php stop 
+```
+or
+```
+composer chat-server-stop
 ```
 
 You need to configure the web server so  that your server has activated 
