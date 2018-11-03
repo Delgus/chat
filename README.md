@@ -3,7 +3,7 @@ Simple example for chat use websocket
 
 This is a project for my training. Don't use it in production.
 
-[ Демо ](http://services-online.tk/chat)
+[ DEMO ](http://services-online.tk/chat)
 
 ![screenshot](https://delgus.tk/img/screenshot.png)
 ## Install  
