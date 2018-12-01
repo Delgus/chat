@@ -12,7 +12,7 @@ if ( $_POST ) {
 		exit;
 	}
 	//validate exist username and  correct password
-	if ( ! $user && ! password_verify( $post['password'], $user['password_hash'] ) ) {
+	if ( ! $user || ! password_verify( $post['password'], $user['password_hash'] ) ) {
 		echo json_encode( [ 'result' => false, 'errors' => 'Incorrect login or password' ] );
 		exit;
 	}
