@@ -5,7 +5,7 @@ This is a project for my training. Don't use it in production.
 
 [ DEMO ](https://chat.delgus.com/chat)
 
-![screenshot](https://delgus.tk/img/screenshot.png)
+![screenshot](https://delgus.github.io/img/screenshot.png)
 ## Install  
 ```
 git clone  https://github.com/Delgus/chat.git  
