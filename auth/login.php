@@ -1,6 +1,7 @@
 <?php
 require_once '../vendor/autoload.php';
 
+header("Access-Control-Allow-Origin: *");
 if ( $_POST ) {
 	$post = filter_input_array( INPUT_POST, $_POST );
 	try {
