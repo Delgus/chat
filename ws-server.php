@@ -1,11 +1,11 @@
 <?php
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 use Firebase\JWT\JWT;
 use Workerman\Worker;
 use db\Db;
 
-$ws_worker = new Worker('websocket://' . getenv("HOST") . "/ws");
+$ws_worker = new Worker('websocket://' . getenv("HOST") .":".getenv("PORT"). "/ws");
 $db = new Db();
 
 const ONLINE_EVENT = 'onlineEvent';
