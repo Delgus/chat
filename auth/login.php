@@ -1,34 +1,32 @@
 <?php
 require_once '../vendor/autoload.php';
-require_once '../config/config-local.php';
 
 if ( $_POST ) {
 	$post = filter_input_array( INPUT_POST, $_POST );
 	try {
-		$db   = new \db\Db( DB_DSN, DB_USERNAME, DB_PASSWORD );
+		$db   = new \db\Db();
 		$user = $db->getUserByUsername( $post['username'] );
 	} catch ( Throwable $e ) {
 		echo json_encode( [ 'result' => false, 'errors' => 'Internal error' ] );
-		exit;
+		return;
 	}
 	//validate exist username and  correct password
 	if ( ! $user || ! password_verify( $post['password'], $user['password_hash'] ) ) {
 		echo json_encode( [ 'result' => false, 'errors' => 'Incorrect login or password' ] );
-		exit;
+		return;
 	}
 	//create jwt
 	$token = [
-		"iss" => HOST_NAME, //issuer
-		"aud" => WEB_SOCKET,//audience
+		"iss" => getenv("HOST"), //issuer
+		// "aud" => WEB_SOCKET,//audience
 		"iat" => time(),    //issued at
-		"exp" => time() + TOKEN_LIVE,//expire time
+		"exp" => time() + getenv("TOKEN_LIVE"),//expire time
 		//subject
 		"sub" => [
 			'id'       => $user['id'],
 			'username' => $user['username']
 		],
 	];
-	$jwt   = \Firebase\JWT\JWT::encode( $token, SECRET_KEY );
+	$jwt   = \Firebase\JWT\JWT::encode( $token, getenv("SECRET_KEY"));
 	echo json_encode( [ 'result' => true, 'jwt' => $jwt ] );
-	exit;
 }

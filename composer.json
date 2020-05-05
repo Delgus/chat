@@ -5,7 +5,9 @@
   "require": {
     "php": ">=7.2.0",
     "workerman/workerman": "*",
-    "firebase/php-jwt": "^5.0"
+    "firebase/php-jwt": "^5.0",
+    "ext-pdo": "*",
+    "ext-json": "*"
   },
   "authors": [
     {
@@ -20,8 +22,8 @@
     }
   },
   "scripts": {
-    "chat-server-start": "php chat/bin/server.php start -d",
-    "chat-install": "php chat/bin/chat-install.php",
+    "ws": "php ws-server.php start -d",
+    "init-chat-db": "php init-chat-db.php",
     "auth-install": "php auth/bin/auth-install.php",
     "chat-server-stop": "php chat/bin/server.php stop"
   }

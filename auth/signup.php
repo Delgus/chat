@@ -1,6 +1,5 @@
 <?php
 require_once '../vendor/autoload.php';
-require_once '../config/config-local.php';
 
 if ($_POST) {
     $post = filter_input_array(INPUT_POST, $_POST);
@@ -24,7 +23,7 @@ if ($_POST) {
 
     if (empty($errors)) {
     	try {
-		    $db = new \db\Db(DB_DSN, DB_USERNAME, DB_PASSWORD);
+		    $db = new \db\Db();
 		    //unique username
 		    if ($db->getUserByUsername($post['username'])) {
 			    $errors['username'] = 'Not unique user!';
@@ -43,7 +42,7 @@ if ($_POST) {
         $password_hash = password_hash($post['password'], PASSWORD_DEFAULT);
         $db->saveUser($post['username'], $post['email'], $password_hash);
         echo json_encode(['result' => true]);
-        exit;
+        return;
     }
     echo json_encode(['result' => false,'errors' => $errors]);
 }

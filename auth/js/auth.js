@@ -1,29 +1,29 @@
-var signinTab = document.getElementById("signinTab");
-var signupTab = document.getElementById("signupTab");
-var signinForm = document.getElementById("signin-form");
-var signupForm = document.getElementById("signup-form");
+let signinTab = document.getElementById("signinTab");
+let signupTab = document.getElementById("signupTab");
+let signinForm = document.getElementById("signin-form");
+let signupForm = document.getElementById("signup-form");
 
 signinTab.onclick = function () {
     signinForm.style.display = '';
     signupForm.style.display = 'none';
     signinTab.classList.add('active');
     signupTab.classList.remove('active');
-}
+};
 
 signupTab.onclick = function () {
     signinForm.style.display = 'none';
     signupForm.style.display = '';
     signupTab.classList.add('active');
     signinTab.classList.remove('active');
-}
+};
 
 signinForm.onsubmit = function () {
-    var xhr = createRequest();
-    var data = new FormData(signinForm);
-    xhr.open("POST", auth_url + '/login.php');
+    let xhr = createRequest();
+    let data = new FormData(signinForm);
+    xhr.open("POST", `https://${document.location.host}/auth/login.php`);
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-            var answer = JSON.parse(xhr.responseText);
+            let answer = JSON.parse(xhr.responseText);
             if (answer.result) {
                 document.cookie = 'jwt=' + answer.jwt + '; path=/';
                 window.location = ref;
@@ -38,12 +38,12 @@ signinForm.onsubmit = function () {
 
 signupForm.onsubmit = function (e) {
     e.preventDefault();
-    var xhr = createRequest();
-    var data = new FormData(signupForm);
-    xhr.open("POST", auth_url + '/signup.php');
+    let xhr = createRequest();
+    let data = new FormData(signupForm);
+    xhr.open("POST", `https://${document.location.host}/auth/signup.php`);
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-            var answer = JSON.parse(xhr.responseText);
+            let answer = JSON.parse(xhr.responseText);
             if (answer.result) {
                 alert("SUCCESS");
             } else {
@@ -52,10 +52,10 @@ signupForm.onsubmit = function (e) {
         }
     };
     xhr.send(data);
-}
+};
 
 if (document.cookie) {
-    window.location = ref;
+    window.location = `https://${document.location.host}/chat`;
 }
 
 
