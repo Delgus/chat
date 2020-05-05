@@ -16,5 +16,4 @@ $pdo->exec(
  			  		`username` TEXT NOT NULL , 
  			  		`email` TEXT NOT NULL , 
  			  		`password_hash` TEXT NOT NULL , 
- 			  		PRIMARY KEY (`id`)
- 			  ) ENGINE = InnoDB;");
+ 			  		PRIMARY KEY (`id`));");

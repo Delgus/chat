@@ -23,8 +23,6 @@
   },
   "scripts": {
     "ws": "php ws-server.php start -d",
-    "init-chat-db": "php init-chat-db.php",
-    "auth-install": "php auth/bin/auth-install.php",
-    "chat-server-stop": "php chat/bin/server.php stop"
+    "init-db": "php init-db.php"
   }
 }
