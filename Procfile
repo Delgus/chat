@@ -1,2 +1,2 @@
-worker:php ws-server.php start -d
-web: .
+worker:composer ws
+web:.
