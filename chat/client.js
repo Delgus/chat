@@ -1,13 +1,29 @@
 function redirectToAuth() {
-    window.location = `https://${document.location.host}/auth`;
+    window.location = `/auth`;
 }
 
-if (!document.cookie) {
+const jwt = getCookie("jwt");
+if (!jwt) {
     redirectToAuth();
 }
 
+// возвращает куки с указанным name,
+// или undefined, если ничего не найдено
+function getCookie(name) {
+    let matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+    ));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+
 window.onload = function () {
-    let ws = new WebSocket("wss://" + document.location.host + "/ws?" + document.cookie);
+    let settings = getSettings();
+    if(!settings){
+        alert("can not load settings");
+        return;
+    }
+
+    let ws = new WebSocket(`${settings.ws}?jwt=${jwt}`);
 
     ws.onerror = function () {
         alert("WEBSOCKET SERVER DOESN'T WORK!");
@@ -15,6 +31,7 @@ window.onload = function () {
 
     ws.onmessage = function (e) {
         let chat_box = document.getElementById("chat_box");
+        console.log(e.data);
         let content = JSON.parse(e.data);
         let responseMap = {
             onlineEvent: function (data) {
@@ -31,13 +48,10 @@ window.onload = function () {
                 chat_box.scrollTop = 9999;
             },
             lastMessagesEvent: function (data) {
-                for (var l in data) {
-                    chat_box.innerHTML += "<b>" + data[l].author + "</b> [" + data[l].time + "] : " + data[l].text + "<br>";
+                for (let m of data) {
+                    chat_box.innerHTML += "<b>" + m.author + "</b> [" + m.time + "] : " + m.text + "<br>";
                     chat_box.scrollTop = 9999;
                 }
-            },
-            attackEvent: function () {
-                unlogin();
             },
             expiredEvent: function () {
                 unlogin();
@@ -71,6 +85,37 @@ window.onload = function () {
 
     function delete_cookie(name) {
         document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
+    }
+
+    function getSettings() {
+        let xhr = createRequest();
+        if (!xhr) {
+            alert("Невозможно создать XMLHttpRequest");
+            return;
+        }
+
+        let settings;
+        xhr.open("GET", `/settings/api.php`, false);
+        xhr.send();
+        if (xhr.status === 200) {
+            return JSON.parse(xhr.responseText);
+        }
+        return false;
+    }
+
+    //ajax запрос на чистом js
+    function createRequest() {
+        if (window.XMLHttpRequest) {
+            //Gecko-совместимые браузеры, Safari, Konqueror
+            return new XMLHttpRequest();
+        } else if (window.ActiveXObject) {
+            //Internet explorer
+            try {
+                return new ActiveXObject("Microsoft.XMLHTTP");
+            } catch (CatchException) {
+                return new ActiveXObject("Msxml2.XMLHTTP");
+            }
+        }
     }
 
 
