@@ -11,43 +11,21 @@ cd chat
 composer install  
 ```
 
-Create file for configure application:
+## Configuration
+```shell script
+cp .env.example .env
 ```
-php init.php
-```
-
-
-You must specify your settings in config/config-local.php
 
 Create tables in db  
-```
-php auth/bin/auth-install.php
-php chat/bin/chat-install.php
-```  
-or
-```
-composer auth-install
-composer chat-install
+```shell script
+php init-db.php
 ```
 
-
+## Running
 
 To start the server web socket as daemon  
-```
-php chat/bin/server.php start -d  
-```
-or
-```
-composer chat-server-start
-```
-
-To stop the server web socket
-```
-php chat/bin/server.php stop 
-```
-or
-```
-composer chat-server-stop
+```shell script
+php ws-server.php start -d  
 ```
 
 You need to configure the web server so  that your server has activated 
@@ -55,7 +33,9 @@ support for PHP and that all files ending in .php are handled by PHP.
 
 You can also use the php built-in server for the test 
 ```
-php -S 127.0.0.1:8000
+php -S 127.0.0.1:8080
 ```
 
-and see your application on http://127.0.0.1:8000
+and see your application on http://127.0.0.1:8080
+
+

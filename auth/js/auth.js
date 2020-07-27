@@ -19,14 +19,19 @@ signupTab.onclick = function () {
 
 signinForm.onsubmit = function () {
     let xhr = createRequest();
+    if (!xhr) {
+        alert("Невозможно создать XMLHttpRequest");
+        return;
+    }
+
     let data = new FormData(signinForm);
-    xhr.open("POST", `https://${document.location.host}/auth/login.php`);
+    xhr.open("POST", `/auth/login.php`);
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
             let answer = JSON.parse(xhr.responseText);
             if (answer.result) {
                 document.cookie = 'jwt=' + answer.jwt + '; path=/';
-                window.location = ref;
+                window.location = '/chat';
             } else {
                 alert("Fail!");
             }
@@ -34,13 +39,18 @@ signinForm.onsubmit = function () {
     };
     xhr.send(data);
     return false;
-}
+};
 
 signupForm.onsubmit = function (e) {
     e.preventDefault();
     let xhr = createRequest();
+    if (!xhr) {
+        alert("Невозможно создать XMLHttpRequest");
+        return;
+    }
+
     let data = new FormData(signupForm);
-    xhr.open("POST", `https://${document.location.host}/auth/signup.php`);
+    xhr.open("POST", `/auth/signup.php`);
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
             let answer = JSON.parse(xhr.responseText);
@@ -54,34 +64,34 @@ signupForm.onsubmit = function (e) {
     xhr.send(data);
 };
 
-if (document.cookie) {
-    window.location = `https://${document.location.host}/chat`;
+const jwt = getCookie("jwt");
+if (jwt) {
+    window.location = `/chat`;
 }
 
 
 //ajax запрос на чистом js
 function createRequest() {
-    var Request = false;
-
     if (window.XMLHttpRequest) {
         //Gecko-совместимые браузеры, Safari, Konqueror
-        Request = new XMLHttpRequest();
-    }
-    else if (window.ActiveXObject) {
+        return new XMLHttpRequest();
+    } else if (window.ActiveXObject) {
         //Internet explorer
         try {
-            Request = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        catch (CatchException) {
-            Request = new ActiveXObject("Msxml2.XMLHTTP");
+            return new ActiveXObject("Microsoft.XMLHTTP");
+        } catch (CatchException) {
+            return new ActiveXObject("Msxml2.XMLHTTP");
         }
     }
+}
 
-    if (!Request) {
-        alert("Невозможно создать XMLHttpRequest");
-    }
-
-    return Request;
+// возвращает куки с указанным name,
+// или undefined, если ничего не найдено
+function getCookie(name) {
+    let matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+    ));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
 

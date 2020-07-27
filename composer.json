@@ -3,11 +3,13 @@
   "description": "simple chat",
   "type": "project",
   "require": {
-    "php": ">=7.2.0",
+    "php": ">=7.4.0",
     "workerman/workerman": "*",
-    "firebase/php-jwt": "^5.0",
+    "firebase/php-jwt": "*",
     "ext-pdo": "*",
-    "ext-json": "*"
+    "ext-json": "*",
+    "monolog/monolog": "^2.1",
+    "vlucas/phpdotenv": "^5.1"
   },
   "authors": [
     {
@@ -22,7 +24,11 @@
     }
   },
   "scripts": {
-    "ws": "php ws-server.php start -d",
-    "init-db": "php init-db.php"
+    "ws-server": "php ws-server.php start -d",
+    "init-db": "php init-db.php",
+    "lint": "vendor/bin/php-cs-fixer fix . "
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^2.16"
   }
 }
